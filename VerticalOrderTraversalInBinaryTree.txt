@@ -35,6 +35,7 @@ void levelOrder(node* root) {
     }
     queue<node*> q;
     q.push(root);
+
     while(!q.empty()) {
         node* front_node = q.front();
         q.pop();
