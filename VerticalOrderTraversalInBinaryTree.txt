@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+void verticalOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    map<int, vector<int>> m;
+    queue<pair<node*, int>> q; 
+    //1st agrs->node, 2nd args->position
+    q.push({root, 0});
+    while(!q.empty()) {
+        node* front_node = q.front().first;
+        int front_pos = q.front().second;
+        q.pop();
+        m[front_pos].push_back(front_node->data);
+        if(front_node->left != NULL) {
+            q.push({front_node->left, front_pos - 1});
+        }
+        if(front_node->right != NULL) {
+            q.push({front_node->right, front_pos + 1});
+        }
+    }
+    
+    map<int, vector<int>> :: iterator it;
+    for(it = m.begin(); it != m.end(); ++it) {
+        for(auto data: (*it).second) {
+            cout<<data<<" ";
+        }
+    }
+    
+}
+
+int main() {
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"LevelOrder traversal is :- ";
+    levelOrder(updatedRoot);
+    cout<<endl<<"VerticalOrder traversal is :- ";
+    verticalOrder(updatedRoot);
+    
+    return 0;
+}
