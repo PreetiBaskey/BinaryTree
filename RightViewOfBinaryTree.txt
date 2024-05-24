@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+// Using DFS
+// void preOrder(node* root, int level, vector<int> &result) {
+//     if(root == NULL) {
+//         return;
+//     }
+//     if(result.size() < level) {
+//         result.push_back(root->data);
+//     }
+//     preOrder(root->right, level + 1, result);
+//     preOrder(root->left, level + 1, result);
+// }
+// void rightView(node* root) {
+//     vector<int> result;
+//     int level = 1;
+//     preOrder(root, level, result);
+//     for(auto data: result) {
+//         cout<<data<<" ";
+//     }
+// }
+
+// Using BFS
+void rightView(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    vector<int> result;
+    while(!q.empty()) {
+        int size = q.size();
+        node* front_node = NULL;
+        while(size--) {
+            front_node = q.front();
+            q.pop();
+            if(front_node->left != NULL) {
+                q.push(front_node->left);
+            }
+            if(front_node->right != NULL) {
+                q.push(front_node->right);
+            }
+        }
+        result.push_back(front_node->data);
+    }
+    for(auto data: result) {
+        cout<<data<<" ";
+    }
+}
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Top view of binary tree is :- ";
+    rightView(updatedRoot);
+    
+    return 0;
+}
