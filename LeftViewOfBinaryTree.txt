@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL]:- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void preOrder(node* root, vector<int> &result, int level) {
+    if(root == NULL) {
+        return;
+    }
+    if(level == result.size()) {
+        result.push_back(root->data);
+    }
+    preOrder(root->left, result, level + 1);
+    preOrder(root->right, result, level + 1);
+}
+void leftView(node* root) {
+    vector<int> result;
+    int level = 0;
+    preOrder(root, result, level);
+    for(auto data: result) {
+        cout<<data<<" ";
+    }
+}
+
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Left view of binary tree :- ";
+    leftView(updatedRoot);
+    
+    return 0;
+}
