@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL]:- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void topView(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<pair<node*, int>> q;
+    q.push({root, 0});
+    map<int, int> m;
+    while(!q.empty()) {
+        node* front_node = q.front().first;
+        int front_pos = q.front().second;
+        q.pop();
+        if(m.find(front_pos) == m.end()) {
+            m[front_pos] = front_node->data;   
+        }
+        if(front_node->left != NULL) {
+            q.push({front_node->left, front_pos - 1});
+        }
+        if(front_node->right != NULL) {
+            q.push({front_node->right, front_pos + 1});
+        }
+    }
+    map<int, int> :: iterator it;
+    for(it = m.begin(); it != m.end(); ++it) {
+        cout<<it->second<<" ";
+    }
+}
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Top view of binary tree :- ";
+    topView(updatedRoot);
+    
+    return 0;
+}
