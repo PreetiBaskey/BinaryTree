@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* front_node = q.front();
+        cout<<front_node->data<<" ";
+        q.pop();
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+int heightOfBinaryTree(node* root) {
+    if(root == NULL) {
+        return 0;
+    }
+    int lh = heightOfBinaryTree(root->left);
+    int rh = heightOfBinaryTree(root->right);
+    
+    return 1 + max(lh, rh);
+}
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Level Order traversal is :- ";
+    levelOrder(updatedRoot);
+    int result = heightOfBinaryTree(updatedRoot);
+    cout<<endl<<"Height of binary tree is :- "<<result;
+    
+    return 0;
+}
