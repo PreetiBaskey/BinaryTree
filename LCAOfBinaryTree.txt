@@ -1,0 +1,83 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL){
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+node* LCAOfBinaryTree(node* root, int p, int q) {
+    if(root == NULL) {
+        return NULL;
+    }
+    if(root->data == p || root->data == q) {
+        return root;
+    }
+    
+    node* leftN = LCAOfBinaryTree(root->left, p, q);
+    node* rightN = LCAOfBinaryTree(root->right, p, q);
+    
+    if(leftN != NULL && rightN != NULL) {
+        return root;
+    }
+    if(leftN != NULL) {
+        return leftN;
+    }
+    
+    return rightN;
+}
+
+int main() {
+    
+    int p, q;
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Enter p :- ";
+    cin>>p;
+    cout<<"Enter q :- ";
+    cin>>q;
+    node* LCA = LCAOfBinaryTree(updatedRoot, p, q);
+    cout<<endl<<"LCA of binary tree is :- "<<LCA->data;
+    
+    return 0;
+}
