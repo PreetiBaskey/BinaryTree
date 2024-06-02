@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+bool check(node* l, node* r) {
+    if(l == NULL && r == NULL) {
+        return true;
+    }
+    if(l == NULL || r == NULL) {
+        return false;
+    }
+    
+    if((l->data == r->data) && check(l->left, r->right) && check(l->right, r->left)) {
+        return true;
+    }
+    
+    return false;
+}
+bool isSymmetric(node* root) {
+    if(root == NULL) {
+        return true;
+    }
+    
+    return check(root->left, root->right);
+}
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Level order traversal is :- ";
+    levelOrder(updatedRoot);
+    cout<<endl<<"Symmetric tree ? ";
+    bool result = isSymmetric(updatedRoot);
+    if(result) {
+        cout<<"true !!";
+    }
+    else {
+        cout<<"False !!";
+    }
+    
+    return 0;
+}
