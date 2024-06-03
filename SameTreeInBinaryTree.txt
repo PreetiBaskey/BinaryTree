@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL]:- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+
+bool isSameBinaryTree(node* root1, node* root2) {
+    if(root1 == NULL && root2 == NULL) {
+        return true;
+    }
+    if(root1 == NULL || root2 == NULL) {
+        return false;
+    }
+    
+    if(root1->data != root2->data) {
+        return false;
+    }
+    
+    if(isSameBinaryTree(root1->left, root2->left) && isSameBinaryTree(root1->right, root2->right)) {
+        return true;
+    }
+    
+    return false;
+}
+
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot1 = createTree(root);
+    cout<<endl<<"Level Order traversal of first binary tree is :- ";
+    levelOrder(updatedRoot1);
+    cout<<endl;
+    node* updatedRoot2 = createTree(root);
+    cout<<endl<<"Level Order traversal of second binary tree is :- ";
+    levelOrder(updatedRoot2);
+    bool result = isSameBinaryTree(updatedRoot1, updatedRoot2);
+    cout<<endl<<"Is Binary Tree Same ? ";
+    if(result) {
+        cout<<"True !!";
+    }
+    else {
+        cout<<"False !!";
+    }
+    
+    return 0;
+}
