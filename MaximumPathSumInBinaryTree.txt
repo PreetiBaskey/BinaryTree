@@ -1,0 +1,79 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int maxSum = INT_MIN;
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+        
+        node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+node* createTree(node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+long long solve(node* root) {
+    if(root == NULL) {
+        return 0;
+    }
+    
+    int l = solve(root->left);
+    int r = solve(root->right);
+    
+    int got_sum_at_below = l + r + root->data;
+    int got_sum_at_one_of_them = max(l, r) + root->data;
+    int got_sum_at_root = root->data;
+    
+    maxSum = max({maxSum, got_sum_at_below, got_sum_at_one_of_them, got_sum_at_root});
+    
+    return max(got_sum_at_one_of_them, got_sum_at_root);
+}
+int main() {
+    
+    node* root = NULL;
+    node* updatedRoot = createTree(root);
+    cout<<"Level order traversal is :- ";
+    levelOrder(updatedRoot);
+    
+    solve(updatedRoot);
+    cout<<endl<<"Maximum path sum is :- "<<maxSum;
+    
+    
+    return 0;
+}
