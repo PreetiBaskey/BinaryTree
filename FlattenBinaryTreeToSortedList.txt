@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node {
+    public:
+        int data;
+        Node* left;
+        Node* right;
+        
+        Node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+Node* createTree(Node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new Node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(Node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<Node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        Node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+Node* flatteningBT(Node* root) {
+    if(root == NULL) {
+        return NULL;
+    }
+    Node* head = flatteningBT(root->left);
+    root->left = NULL;
+    root->right = flatteningBT(root->right);
+    
+    if(head != NULL) {
+        Node* temp = head;
+        while(temp != NULL && temp->right != NULL) {
+            temp = temp->right;
+        }
+        temp->right = root;
+    }
+    else {
+        head = root;
+    }
+    
+    return head;
+}
+int main() {
+    
+    Node* root = NULL;
+    Node* updatedRoot = createTree(root);
+    cout<<"Level order traversal is :- ";
+    levelOrder(updatedRoot);
+    cout<<endl<<"Flattened Binary tree is :- ";
+    Node* result = flatteningBT(updatedRoot);
+    while(result != NULL) {
+        cout<<result->data<<" ";
+        result = result->right;
+    }
+    
+    return 0;
+}
