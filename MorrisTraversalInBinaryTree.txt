@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node {
+    public:
+        int data;
+        Node* left;
+        Node* right;
+        
+        Node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+Node* createTree(Node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new Node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void levelOrder(Node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<Node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        Node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+void morrishTraversal(Node* root) {
+    Node* curr = root;
+    
+    while(curr != NULL) {
+        if(curr->left == NULL) {
+        cout<<curr->data<<" ";
+        curr = curr->right;
+    }
+    else {
+        Node* leftNode = curr->left;
+        while(leftNode->right != NULL) {
+            leftNode = leftNode->right;
+        }
+        leftNode->right = curr;
+        
+        Node* temp = curr;
+        curr = curr->left;
+        temp->left = NULL;
+        
+    }
+    }
+}
+int main() {
+    
+    Node* root = NULL;
+    Node* updatedRoot = createTree(root);
+    cout<<"Level order traversal is :- ";
+    levelOrder(updatedRoot);
+    cout<<endl<<"Morris traversal is :- ";
+    morrishTraversal(updatedRoot);
+    
+    return 0;
+}
