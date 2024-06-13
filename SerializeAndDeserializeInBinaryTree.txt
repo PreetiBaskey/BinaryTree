@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Node {
+public:
+int data;
+Node* left;
+Node* right;
+Node(int data) {
+this->data = data;
+this->left = NULL;
+this->right = NULL;
+}
+};
+
+Node* createTree(Node* root) {
+int data;
+cout << "Enter data [Enter -1 for no data]: ";
+cin >> data;
+if (data == -1) {
+return NULL;
+}
+root = new Node(data);
+cout << "Enter left child of " << data << endl;
+root->left = createTree(root->left);
+cout << "Enter right child of " << data << endl;
+root->right = createTree(root->right);
+return root;
+}
+
+void levelOrder(Node* root) {
+if (root == NULL) {
+return;
+}
+queue<Node*> q;
+q.push(root);
+while (!q.empty()) {
+Node* front_node = q.front();
+q.pop();
+cout << front_node->data << " ";
+if (front_node->left != NULL) {
+q.push(front_node->left);
+}
+if (front_node->right != NULL) {
+q.push(front_node->right);
+}
+}
+}
+
+string serializedTree(Node* root) {
+if (root == NULL) {
+return "X";
+}
+string left = serializedTree(root->left);
+string right = serializedTree(root->right);
+return to_string(root->data) + "," + left + "," + right;
+}
+
+Node* createNewTree(queue<string> &q) {
+if (q.empty()) {
+return NULL;
+}
+string front_string = q.front();
+q.pop();
+if (front_string == "X") {
+return NULL;
+}
+Node* root = new Node(stoi(front_string));
+root->left = createNewTree(q);
+root->right = createNewTree(q);
+return root;
+}
+
+Node* deserializedTree(string str) {
+queue<string> q;
+stringstream ss(str);
+
+string substr;
+while (getline(ss, substr, ',')) {
+q.push(substr);
+}
+return createNewTree(q);
+}
+
+int main() {
+Node* root = NULL;
+Node* updatedRoot = createTree(root);
+cout << "Level order traversal is: ";
+levelOrder(updatedRoot);
+string str = serializedTree(updatedRoot);
+cout << endl << "Serialized tree: " << str << endl;
+Node* dserializedRoot = deserializedTree(str);
+cout << "Tree after deserialization is: ";
+levelOrder(dserializedRoot);
+return 0;
+}
