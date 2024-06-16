@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node {
+    public:
+        int data;
+        Node* left;
+        Node* right;
+        
+        Node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+Node* createTree(Node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new Node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void inOrderTraversal(Node* root, vector<int> &result) {
+    if(root == NULL) {
+        return;
+    }
+    inOrderTraversal(root->left, result);
+    result.push_back(root->data);
+    inOrderTraversal(root->right, result);
+}
+void preOrderTraversal(Node* root, vector<int> &result) {
+    if(root == NULL) {
+        return;
+    }
+    result.push_back(root->data);
+    preOrderTraversal(root->left, result);
+    preOrderTraversal(root->right, result);
+}
+Node* solve(vector<int> &inOrder, vector<int> &preOrder, int start, int end, int &idx) {
+    if(start > end) {
+        return NULL;
+    }
+    int rootValue = preOrder[idx];
+    int i = start;
+    for(; i <= end; i++) {
+        if(inOrder[i] == rootValue) {
+            break;
+        }
+    }
+    idx++;
+    Node* root = new Node(rootValue);
+    root->left = solve(inOrder, preOrder, start, i - 1, idx);
+    root->right = solve(inOrder, preOrder, i + 1, end, idx);
+    
+    return root;
+}
+void levelOrderTraversal(Node* root) {
+    if(root == NULL) {
+        return;
+    }
+    queue<Node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        Node* front_node = q.front();
+        q.pop();
+        cout<<front_node->data<<" ";
+        if(front_node->left != NULL) {
+            q.push(front_node->left);
+        }
+        if(front_node->right != NULL) {
+            q.push(front_node->right);
+        }
+    }
+}
+int main() {
+    
+    Node* root = NULL;
+    Node* updatedRoot = createTree(root);
+    
+    cout<<"InOrder traversal is :- ";
+    vector<int> inOrder;
+    inOrderTraversal(updatedRoot, inOrder);
+    for(auto data: inOrder) {
+        cout<<data<<" ";
+    }
+    
+    cout<<endl<<"PreOrder traversal is :- ";
+    vector<int> preOrder;
+    preOrderTraversal(updatedRoot, preOrder);
+    for(auto data: preOrder) {
+        cout<<data<<" ";
+    }
+    
+    int N = inOrder.size();
+    int idx = 0;
+    Node* newRoot = solve(inOrder, preOrder, 0, N - 1, idx);
+    cout<<endl<<"Level Order traversal is :- ";
+    levelOrderTraversal(newRoot);
+    
+    return 0;
+}
