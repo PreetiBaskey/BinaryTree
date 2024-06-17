@@ -1,0 +1,102 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node {
+    public:
+        int data;
+        Node* left;
+        Node* right;
+        
+        Node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+Node* createTree(Node* root) {
+    int data;
+    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new Node(data);
+    cout<<"Enter left data of "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+void inOrderTraversal(Node* root, vector<int> &result) {
+    if(root == NULL) {
+        return;
+    }
+    inOrderTraversal(root->left, result);
+    result.push_back(root->data);
+    inOrderTraversal(root->right, result);
+}
+void postOrderTraversal(Node* root, vector<int> & result) {
+    if(root == NULL) {
+        return;
+    }
+    postOrderTraversal(root->left, result);
+    postOrderTraversal(root->right, result);
+    result.push_back(root->data);
+    
+}
+Node* solve(vector<int> &inOrder, vector<int> &postOrder, int inStart, int inEnd, int postStart, int postEnd) {
+    if(inStart > inEnd) {
+        return NULL;
+    }
+    
+    int rootValue = postOrder[postEnd];
+    Node* root = new Node(rootValue);
+    
+    int rootIndex = inStart;
+    for(; rootIndex <= inEnd; rootIndex++) {
+        if(inOrder[rootIndex] == rootValue) {
+            break;
+        }
+    }
+    
+    int leftTreeSize = rootIndex - inStart;
+    int rightTreeSize = inEnd - rootIndex;
+    
+    root->left = solve(inOrder, postOrder, inStart, rootIndex - 1, postStart, postStart + leftTreeSize - 1);
+    root->right = solve(inOrder, postOrder, rootIndex + 1, inEnd, postEnd - rightTreeSize, postEnd - 1);
+    
+    return root;
+    
+    
+}
+int main() {
+    
+    Node* root = NULL;
+    Node* updatedRoot = createTree(root);
+    
+    cout<<"InOrder traversal is :- ";
+    vector<int> inOrder;
+    inOrderTraversal(updatedRoot, inOrder);
+    for(auto data: inOrder) {
+        cout<<data<<" ";
+    }
+    
+    cout<<endl<<"PostOrder traversal is :- ";
+    vector<int> postOrder;
+    postOrderTraversal(updatedRoot, postOrder);
+    for(auto data: postOrder) {
+        cout<<data<<" ";
+    }
+    
+    int N = inOrder.size();
+    Node* newNode = solve(inOrder, postOrder, 0, N - 1, 0, N - 1);
+    cout<<endl<<"InOrder after constructing is :- ";
+    vector<int> newInOrder;
+    inOrderTraversal(newNode, newInOrder);
+    for(auto data: newInOrder) {
+        cout<<data<<" ";
+    }
+    
+    return 0;
+}
