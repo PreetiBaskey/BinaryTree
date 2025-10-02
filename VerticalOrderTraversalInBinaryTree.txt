@@ -88,3 +88,56 @@ int main() {
     
     return 0;
 }
+
+
+
+// Leetcode version code - Problem No - 987
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+
+        if(root == NULL) {
+            return {};
+        }
+        vector<vector<int>> result;
+        map<int, map<int, vector<int>>> m; // horizontal distance, level, list of nodes
+        queue<pair<TreeNode*, pair<int, int>>> q; // root, horizontal distance, level
+        q.push({root, {0, 0}});
+        while(!q.empty()) {
+            TreeNode* frontNode = q.front().first;
+            int hd = q.front().second.first;
+            int lvl = q.front().second.second;
+            q.pop();
+            m[hd][lvl].push_back(frontNode->val);
+            if(frontNode->left != NULL) {
+                q.push({frontNode->left, {hd - 1, lvl + 1}});
+            }
+            if(frontNode->right != NULL) {
+                q.push({frontNode->right, {hd + 1, lvl + 1}});
+            }
+        }
+
+        for(auto &col: m) {
+            vector<int> tempLevelData;
+            for(auto &level: col.second) {
+                sort(level.second.begin(), level.second.end());
+                tempLevelData.insert(tempLevelData.end(), level.second.begin(), level.second.end());
+            }
+            result.push_back(tempLevelData);
+        }
+
+
+        return result;
+    }
+};
