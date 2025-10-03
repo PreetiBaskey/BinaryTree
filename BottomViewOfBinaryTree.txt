@@ -61,3 +61,56 @@ int main() {
     
     return 0;
 }
+
+
+
+
+
+
+
+//GeeksForGeeks version of bottom view of binary tree
+/*
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int x) {
+        data = x;
+        left = right = NULL;
+    }
+};
+*/
+
+class Solution {
+  public:
+    vector<int> bottomView(Node *root) {
+        if(root == NULL) {
+            return {};
+        }
+        vector<int> result;
+        map<int, int> bottomNodes; //horizontal distance(hd), node
+        queue<pair<Node*, int>> q; //node, horizontal distance(hd)
+        q.push({root, 0});
+        while(!q.empty()) {
+            Node* frontNode = q.front().first;
+            int hd = q.front().second;
+            q.pop();
+            
+            bottomNodes[hd] = frontNode->data;
+            
+            if(frontNode->left != NULL) {
+                q.push({frontNode->left, hd - 1});
+            }
+            if(frontNode->right != NULL) {
+                q.push({frontNode->right, hd + 1});
+            }
+        }
+        for(auto &data: bottomNodes) {
+            result.push_back(data.second);
+        }
+        
+        return result;
+    }
+};
