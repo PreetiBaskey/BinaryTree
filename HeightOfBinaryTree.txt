@@ -66,3 +66,50 @@ int main() {
     
     return 0;
 }
+
+
+
+
+
+//GeeksForGeeks version of height of binary tree
+/*
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+*/
+class Solution {
+  public:
+    int height(Node* root) {
+        if(root == NULL) {
+            return 0;
+        }
+        int result = 0;
+        queue<Node*> q;
+        q.push(root);
+        while(!q.empty()) {
+            int size = q.size();
+            while(size--) {
+                Node* frontNode = q.front();
+                q.pop();
+                
+                if(frontNode->left != NULL) {
+                    q.push(frontNode->left);
+                }
+                if(frontNode->right != NULL) {
+                    q.push(frontNode->right);
+                }
+            }
+            result++;
+        }
+        
+        return result - 1;
+    }
+};
