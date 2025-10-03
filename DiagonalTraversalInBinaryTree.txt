@@ -68,3 +68,38 @@ int main() {
     
     return 0;
 }
+
+
+
+// GeeksForGeeks version of Diagonal traversal of binary tree
+/* A binary tree node
+struct Node
+{
+    int data;
+    Node* left, * right;
+}; */
+
+class Solution {
+  public:
+    vector<int> diagonal(Node *root) {
+        if(root == NULL) {
+            return {};
+        }
+        vector<int> result;
+        queue<Node*> q;
+        q.push(root);
+        while(!q.empty()) {
+            Node* frontNode = q.front();
+            q.pop();
+            while(frontNode) {
+                if(frontNode->left != NULL) {
+                    q.push(frontNode->left);
+                }
+                result.push_back(frontNode->data);
+                frontNode = frontNode->right;
+            }
+        }
+        
+        return result;
+    }
+};
