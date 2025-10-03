@@ -56,3 +56,48 @@ int main() {
     
     return 0;
 }
+
+
+
+
+
+// GeeksForGeeks version of left view of binary tree
+/*
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+*/
+
+class Solution {
+  public:
+    void solve(Node* root, vector<int> &result, int level) {
+        if(root == NULL) {
+            return;
+        }
+        if(result.size() == level) {
+            result.push_back(root->data);
+        }
+        solve(root->left, result, level + 1);
+        solve(root->right, result, level + 1);
+    }
+    vector<int> leftView(Node *root) {
+        
+        if(root == NULL) {
+            return {};
+        }
+        vector<int> result;
+        solve(root, result, 0);
+        
+        return result;
+        
+    }
+}; 
