@@ -131,3 +131,52 @@ public:
         return result;
     }
 };
+
+
+
+
+
+// GeeksForGeeks version of right view of binary tree
+/*
+class Node {
+  public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+}; */
+
+class Solution {
+  public:
+    vector<int> rightView(Node *root) {
+        if(root == NULL) {
+            return {};
+        }
+        vector<int> result;
+        queue<Node*> q;
+        q.push(root);
+        while(!q.empty()) {
+            int size = q.size();
+            Node* frontNode = NULL;
+            while(size--) {
+                frontNode = q.front();
+                q.pop();
+                if(frontNode->left != NULL) {
+                    q.push(frontNode->left);
+                }
+                if(frontNode->right != NULL) {
+                    q.push(frontNode->right);
+                }
+            }
+            result.push_back(frontNode->data);
+            
+        }
+        
+        return result;
+    }
+};
