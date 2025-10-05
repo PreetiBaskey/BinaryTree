@@ -72,3 +72,109 @@ int main() {
     
     return 0;
 }
+
+
+
+
+
+
+
+// BFS Approach of replace nodes with depth - time complexity - O(n), space complexity - O(n)
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node {
+    public:
+        int data;
+        Node* left;
+        Node* right;
+        
+        Node(int data) {
+            this->data = data;
+            this->left = NULL;
+            this->right = NULL;
+        }
+};
+
+Node* createTree(Node* root) {
+    int data;
+    cout<<"Enter data :- ";
+    cin>>data;
+    if(data == -1) {
+        return NULL;
+    }
+    root = new Node(data);
+    cout<<"Enter left data of :- "<<data<<endl;
+    root->left = createTree(root->left);
+    cout<<"Enter right data of :- "<<data<<endl;
+    root->right = createTree(root->right);
+    
+    return root;
+}
+
+Node* replaceNodesFromDepth(Node* root) {
+    if(root == NULL) {
+        return NULL;
+    }
+    queue<pair<Node*, int>> q; // node, leve
+    q.push({root, 0});
+    while(!q.empty()) {
+        int size = q.size();
+        while(size--) {
+            Node* frontNode = q.front().first;
+            int lvl = q.front().second;
+            q.pop();
+            
+            frontNode->data = lvl;
+            
+            if(frontNode->left != NULL) {
+                q.push({frontNode->left, lvl + 1});
+            }
+            if(frontNode->right != NULL) {
+                q.push({frontNode->right, lvl + 1});
+            }
+        }
+    }
+    
+    return root;
+}
+
+vector<int> levelOrderTraversal(Node* root) {
+    if(root == NULL) {
+        return {};
+    }
+    vector<int> result;
+    queue<Node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        int size = q.size();
+        while(size--) {
+            Node* frontNode = q.front();
+            q.pop();
+            result.push_back(frontNode->data);
+            
+            if(frontNode->left != NULL) {
+                q.push(frontNode->left);
+            }
+            if(frontNode->right != NULL) {
+                q.push(frontNode->right);
+            }
+        }
+    }
+    
+    return result;
+}
+
+int main() {
+    
+    Node* root = NULL;
+    Node* updatedRoot = createTree(root);
+    cout<<"Nodes are replaced with depth :- ";
+    Node* newTree = replaceNodesFromDepth(updatedRoot);
+    vector<int> result = levelOrderTraversal(newTree);
+    for(int &data: result) {
+        cout<<data<<" ";
+    }
+    
+    return 0;
+}
