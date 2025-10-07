@@ -1,3 +1,6 @@
+// LeetCode Question - 663 - it is a premium version code, and practice problem is not available in the GeeksForGeeks
+
+
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -36,17 +39,20 @@ int findSumOfTreeNodes(Node* root) {
     }
     return root->data + findSumOfTreeNodes(root->left) + findSumOfTreeNodes(root->right);
 }
-void check(Node* root, int target, bool &result) {
+int check(Node* root, int target, bool &result) {
     if(root == NULL) {
-        return;
+        return 0;
     }
-    int sum = root->data + findSumOfTreeNodes(root->left) + findSumOfTreeNodes(root->right);
-    if(sum == target) {
+    int leftSum = check(root->left, target, result);
+    int rightSum = check(root->right, target, result);      
+    int currSum = root->data + leftSum + rightSum;
+    
+    if(currSum == target) {
         result = true;
     }
     
-    check(root->left, target, result);
-    check(root->right, target, result);      
+    return currSum;
+    
 }
 bool isEquallyPartition(Node* root) {
     if(root == NULL) {
