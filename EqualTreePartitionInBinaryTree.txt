@@ -1,26 +1,27 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class node {
+class Node {
     public:
         int data;
-        node* left;
-        node* right;
+        Node* left;
+        Node* right;
         
-        node(int data) {
+        Node(int data) {
             this->data = data;
             this->left = NULL;
             this->right = NULL;
         }
 };
-node* createTree(node* root) {
+
+Node* createTree(Node* root) {
     int data;
-    cout<<"Enter data [Enter -1 for NULL] :- ";
+    cout<<"Enter data :- ";
     cin>>data;
     if(data == -1) {
         return NULL;
     }
-    root = new node(data);
+    root = new Node(data);
     cout<<"Enter left data of "<<data<<endl;
     root->left = createTree(root->left);
     cout<<"Enter right data of "<<data<<endl;
@@ -28,69 +29,49 @@ node* createTree(node* root) {
     
     return root;
 }
-void levelOrder(node* root) {
+
+int findSumOfTreeNodes(Node* root) {
+    if(root == NULL) {
+        return 0;
+    }
+    return root->data + findSumOfTreeNodes(root->left) + findSumOfTreeNodes(root->right);
+}
+void check(Node* root, int target, bool &result) {
     if(root == NULL) {
         return;
     }
-    queue<node*> q;
-    q.push(root);
-    while(!q.empty()) {
-        node* front_node = q.front();
-        q.pop();
-        cout<<front_node->data<<" ";
-        if(front_node->left != NULL) {
-            q.push(front_node->left);
-        }
-        if(front_node->right != NULL) {
-            q.push(front_node->right);
-        }
-    }
-}
-int findSumOfWholeTree(node* root) {
-    if(root == NULL) {
-        return 0;
-    }
-    
-    return root->data + findSumOfWholeTree(root->left) + findSumOfWholeTree(root->right);
-}
-int checkEqualPartition(int target, node* root, bool &ans) {
-    if(root == NULL) {
-        return 0;
-    }
-
-     int leftSum = checkEqualPartition(target, root->left, ans);
-    int rightSum = checkEqualPartition(target, root->right, ans);
-    int sum = root->data + leftSum + rightSum;
+    int sum = root->data + findSumOfTreeNodes(root->left) + findSumOfTreeNodes(root->right);
     if(sum == target) {
-        ans = true;
+        result = true;
     }
     
-    return sum;
+    check(root->left, target, result);
+    check(root->right, target, result);      
 }
-bool equalSumPartition(node* root) {
+bool isEquallyPartition(Node* root) {
     if(root == NULL) {
         return false;
     }
-    
-    int sum = findSumOfWholeTree(root);
-    if(sum%2 != 0)  {
+    int sum = findSumOfTreeNodes(root);
+    if(sum % 2 != 0) {
         return false;
     }
-    bool ans = false;
+    bool result = false;
+    check(root, sum/2, result);
     
-    checkEqualPartition(sum/2, root, ans);
-    return ans;
-    
+    return result;
 }
+
 int main() {
-    
-    node* root = NULL;
-    node* updatedRoot = createTree(root);
-    cout<<"Level order traversal is :- ";
-    levelOrder(updatedRoot);
-    
-    bool result = equalSumPartition(updatedRoot);
-    cout<<endl<<"Result is :- "<<result;
+    Node* root = NULL;
+    Node* updatedRoot = createTree(root);
+    bool result = isEquallyPartition(updatedRoot);
+    if(result) {
+        cout<<"Tree can be equally partitioned!";
+    }
+    else {
+        cout<<"Tree can not be equally partitioned!";
+    }
     
     return 0;
 }
