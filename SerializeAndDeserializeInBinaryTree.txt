@@ -94,3 +94,66 @@ cout << "Tree after deserialization is: ";
 levelOrder(dserializedRoot);
 return 0;
 }
+
+
+
+
+
+//LeetCode version of serialize and deserialize of binary tree using DFS, Time complexity - O(n), Space complexity - O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (root == NULL) {
+            return "@";
+        }
+        string left = serialize(root->left);
+        string right = serialize(root->right);
+        return to_string(root->val) + "," + left + "," + right;
+    }
+
+    TreeNode* createTree(queue<string> &q) {
+        if(q.empty()) {
+            return NULL;
+        }
+        string str = q.front();
+        q.pop();
+        if(str == "@") {
+            return NULL;
+        }
+        TreeNode* root = new TreeNode(stoi(str));
+        root->left = createTree(q);
+        root->right = createTree(q);
+
+        return root;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if(data.size() == 0) {
+            return NULL;
+        }
+        stringstream ss(data);
+        string str;
+        queue<string> q;
+        while(getline(ss, str, ',')) {
+            q.push(str);
+        }
+
+        return createTree(q);
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
