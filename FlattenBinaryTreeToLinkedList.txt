@@ -1,3 +1,5 @@
+//Time complexity - O(n), Space complexity(Auxiliary Space) - O(1), Recursion Stack space - O(nlogn) if balance tree and O(n) if skewed tree 
+//LeetCode no - 114
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
