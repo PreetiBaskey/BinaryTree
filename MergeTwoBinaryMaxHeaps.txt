@@ -1,0 +1,29 @@
+// User function Template for C++
+
+class Solution {
+  public:
+    vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
+        vector<int> merged;
+        priority_queue<int> pq;
+        vector<int> result;
+        
+        for(int data: a) {
+            merged.push_back(data);
+        }
+        for(int data: b) {
+            merged.push_back(data);
+        }
+    
+        for(int data: merged) {
+            pq.push(data);
+        }
+        
+        while(!pq.empty()) {
+            int front = pq.top();
+            pq.pop();
+            result.push_back(front);
+        }
+        
+        return result;
+    }
+};
